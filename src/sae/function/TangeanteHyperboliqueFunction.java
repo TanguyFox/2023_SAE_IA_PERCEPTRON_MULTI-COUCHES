@@ -1,7 +1,6 @@
-package sae.mlp;
+package sae.function;
 
-public class SigmoideFunction implements TransferFunction {
-
+public class TangeanteHyperboliqueFunction implements TransferFunction{
     /**
      * Function de transfert
      *
@@ -10,7 +9,7 @@ public class SigmoideFunction implements TransferFunction {
      */
     @Override
     public double evaluate(double value) {
-        return 1 / 1+Math.exp(-value);
+        return Math.tanh(value);
     }
 
     /**
@@ -21,6 +20,6 @@ public class SigmoideFunction implements TransferFunction {
      */
     @Override
     public double evaluateDer(double value) {
-        return evaluate(value) - Math.pow(evaluate(value), 2);
+        return 1 - Math.pow(evaluate(value), 2);
     }
 }

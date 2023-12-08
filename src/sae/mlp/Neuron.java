@@ -1,6 +1,6 @@
 package sae.mlp;
 
-class Neuron {
+public class Neuron {
     public double Value;
     public double[] Weights;
     public double Bias;

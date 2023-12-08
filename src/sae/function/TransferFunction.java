@@ -1,6 +1,6 @@
-package sae.mlp;
+package sae.function;
 
-interface TransferFunction {
+public interface TransferFunction {
     /**
      * Function de transfert
      *
