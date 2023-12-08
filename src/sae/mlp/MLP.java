@@ -37,7 +37,7 @@ public class MLP  {
         int i, j, k;
         double new_value;
 
-        double output[] = new double[fLayers[fLayers.length - 1].Length];
+        double[] output = new double[fLayers[fLayers.length - 1].Length];
 
         // input en entrée du réseau
         for(i = 0; i < fLayers[0].Length; i++) {
@@ -74,7 +74,7 @@ public class MLP  {
      */
 
     public double backPropagate(double[] input, double[] output) {
-        double new_output[] = execute(input);
+        double[] new_output = execute(input);
         double error;
         int i, j, k;
 

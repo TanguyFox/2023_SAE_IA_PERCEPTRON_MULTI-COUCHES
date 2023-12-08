@@ -1,7 +1,7 @@
 package sae.mlp;
 
 class Layer {
-    public Neuron Neurons[];
+    public Neuron[] Neurons;
     public int Length;
 
     /**
