@@ -29,7 +29,7 @@ public class MainMLP {
         String out = ArgParse.getTabFromCmd(args);
 
         double[][] inputs = Constantes.INPUT_BINARY2;
-        double[][] outputs = ArgParse.makeOutput(out);
+        double[][] outputs = Constantes.OUTPUT_BINARY2_XOR2;
         int[] layersInt = ArgParse.makeLayers(layers);
         TransferFunction transferFunction = ArgParse.makeFunction(func);
 
@@ -52,24 +52,31 @@ public class MainMLP {
         while(Arrays.asList(apprentissage).contains(false) && nbInter < maxRep){
             for(int i =0; i< 10; i++) {
                for (int j = 0; j < inputs.length; j++) {
-                   mlp.backPropagate(inputs[j], outputs[j]);
+                       mlp.backPropagate(inputs[j], outputs[j]);
                }
             }
 
             for (int k = 0; k < inputs.length; k++) {
                 double[] output = mlp.execute(inputs[k]);
-                if(Math.abs(output[0] - outputs[k][0]) < 0.1) {
+                boolean check = true;
+                for (int l = 0; l < mlp.getOutputLayerSize(); l++) {
+                    if(!(Math.abs(output[l] - outputs[k][l]) < 0.1)) {
+                        check = false;
+                    }
+                }
+                if(check) {
                     apprentissage[k] = true;
                 }
+
             }
 
             nbInter++;
         }
         if (nbInter < maxRep) {
-            System.out.println("Apprentissage réussi");
+            System.out.println("\nApprentissage réussi\n");
             System.out.println("Etat final : ");
             for (int i = 0; i < inputs.length; i++) {
-                System.out.println("Input : " + Arrays.toString(inputs[i]) + " Output : " + Arrays.toString(mlp.execute(inputs[i])));
+                System.out.println("\tInput : " + Arrays.toString(inputs[i]) + " Output : " + Arrays.toString(mlp.execute(inputs[i])) + " Output désiré : " + Arrays.toString(outputs[i]));
             }
         } else {
             System.out.println("Apprentissage échoué");

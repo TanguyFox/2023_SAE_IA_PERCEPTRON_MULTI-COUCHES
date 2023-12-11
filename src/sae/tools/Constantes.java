@@ -29,7 +29,25 @@ public class Constantes {
             {0},
     };
 
+    public static double[][] OUTPUT_BINARY2_AND2 = new double[][]{
+            {1,0},
+            {1,0},
+            {1,0},
+            {0,1},
+    };
 
+    public static double[][] OUTPUT_BINARY2_OR2 = new double[][]{
+            {1,0},
+            {0,1},
+            {0,1},
+            {0,1},
+    };
 
+    public static double[][] OUTPUT_BINARY2_XOR2 = new double[][]{
+            {1,0},
+            {0,1},
+            {0,1},
+            {1,0},
+    };
 
 }
