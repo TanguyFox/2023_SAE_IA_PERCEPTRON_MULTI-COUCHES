@@ -85,7 +85,7 @@ public class MainMLP {
         boolean[] apprentissage = new boolean[inputs.length];
         Arrays.fill(apprentissage, false);
 
-
+        double[] res = new double[outputs.length];
         while (!appris && nbRep < maxRep) {
 
             Random random = new Random();
@@ -105,11 +105,12 @@ public class MainMLP {
                         break;
                     }
                     appris = true;
+                    res = mlp.execute(inputs[ligne]);
                 }
             } else {
                 Arrays.fill(apprentissage, false);
             }
-            if (nbRep % 100 == 0) System.out.println("Différence sortie désirée / sortie obtenue : " + sortie);
+            if (nbRep % 100 == 0) System.out.println("Différence sortie désirée/sortie obtenue : " + sortie);
             nbRep++;
         }
         if (appris) {
