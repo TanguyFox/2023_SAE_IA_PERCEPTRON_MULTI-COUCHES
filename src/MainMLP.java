@@ -19,11 +19,11 @@ public class MainMLP {
         };
 
         ArgParse.setUsage("Utilisation :\n\n"
-                + "java MainMLP [-tab output] [-func transferFunc] [-layers layersTab] [-lr learningRate]"
+                + "java MainMLP [-des output] [-func transferFunc] [-lay layersTab] [-lr learningRate] [-max maxRep]"
                 + "[-v] [-h]\n"
-                + "-des : Le tableau de sortie désiré {and, or, xor}. Par défautl and\n"
+                + "-des : Le tableau de sortie désiré {and, or, xor}. Par défaut and\n"
                 + "-func : La fonction de transfert {sig, tanh}. Par défault sig\n"
-                + "-layers : Le tableau des couches {1, 2, 3}. Par défaut [2, 1]\n"
+                + "-lay : Le tableau des couches {1, 2, 3}. Par défaut [2, 1]\n"
                 + "-max : Le nombre maximum d'itérations. Par défaut 5000\n"
                 + "-lr : Le taux d'apprentissage. Par défaut 0.6\n"
                 + "-v    : Rendre bavard (mettre à la fin)\n"
@@ -79,31 +79,11 @@ public class MainMLP {
 
         int maxRep = ArgParse.getMaxRep(args);
         int nbRep = 0;
+
+//* vrai si tous les exemples passent sans erreur *//*
         boolean appris = false;
-
-        /*while (nbRep < maxRep && !appris) {
-            double totalError = 0;
-
-            for (int i = 0; i < inputs.length; i++) {
-                double[] input = inputs[i];
-                double[] output = outputs[i];
-                double error = mlp.backPropagate(input, output);
-                totalError += error;
-            }
-            double averageError = totalError / inputs.length;
-
-            System.out.println("Epoch = " + epoch + " Error = " + averageError);
-
-            nbRep++;
-
-        }
-
-        double[] prediction = mlp.execute(new double[]{1, 1, 0});
-        System.out.println(Arrays.toString(prediction));
-*/
         boolean[] apprentissage = new boolean[inputs.length];
         Arrays.fill(apprentissage, false);
-        //* vrai si tous les exemples passent sans erreur *//*
 
 
         while (!appris && nbRep < maxRep) {
@@ -129,6 +109,7 @@ public class MainMLP {
             } else {
                 Arrays.fill(apprentissage, false);
             }
+            if (nbRep % 100 == 0) System.out.println("Différence sortie désirée / sortie obtenue : " + sortie);
             nbRep++;
         }
         if (appris) {
@@ -137,5 +118,27 @@ public class MainMLP {
             System.out.println("Non appris !");
         }
         System.out.println("Nombre d'iterations : " + nbRep);
+
+
+        /*while (nbRep < maxRep && !appris) {
+            double totalError = 0;
+
+            for (int i = 0; i < inputs.length; i++) {
+                double[] input = inputs[i];
+                double[] output = outputs[i];
+                double error = mlp.backPropagate(input, output);
+                totalError += error;
+            }
+            double averageError = totalError / inputs.length;
+
+            System.out.println("Epoch = " + epoch + " Error = " + averageError);
+
+            nbRep++;
+
+        }
+
+        double[] prediction = mlp.execute(new double[]{1, 1, 0});
+        System.out.println(Arrays.toString(prediction));
+*/
     }
 }

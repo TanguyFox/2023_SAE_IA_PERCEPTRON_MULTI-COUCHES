@@ -142,7 +142,8 @@ public class ArgParse {
             tab = "[2, 1]";
 
         if (!tab.startsWith("[") || !tab.endsWith("]")) {
-            System.out.println("Erreur : l'argument -lay doit être de la forme [1, 2, 3]");
+            System.out.println("Erreur dans le format du tableau");
+            usage();
             System.exit(1);
         }
 
