@@ -21,7 +21,8 @@ public class MainMLP {
                 + "-max : Le nombre maximum d'itérations. Par défaut 5000\n"
                 + "-lr : Le taux d'apprentissage. Par défaut 0.6\n"
                 + "-v    : Rendre bavard (mettre à la fin)\n"
-                + "-h    : afficher ceci (mettre à la fin)");
+                + "-h    : afficher ceci (mettre à la fin)"
+        );
 
         double learningRate = ArgParse.getLearningRate(args);
         String func = ArgParse.getFunctionFromCmd(args);
@@ -49,25 +50,24 @@ public class MainMLP {
         Boolean[] apprentissage = new Boolean[inputs.length];
         Arrays.fill(apprentissage, false);
 
-        while(Arrays.asList(apprentissage).contains(false) && nbInter < maxRep){
-            for(int i =0; i< 10; i++) {
-               for (int j = 0; j < inputs.length; j++) {
-                       mlp.backPropagate(inputs[j], outputs[j]);
-               }
+        while (Arrays.asList(apprentissage).contains(false) && nbInter < maxRep) {
+            for (int i = 0; i < 10; i++) {
+                for (int j = 0; j < inputs.length; j++) {
+                    mlp.backPropagate(inputs[j], outputs[j]);
+                }
             }
 
             for (int k = 0; k < inputs.length; k++) {
                 double[] output = mlp.execute(inputs[k]);
                 boolean check = true;
                 for (int l = 0; l < mlp.getOutputLayerSize(); l++) {
-                    if(!(Math.abs(output[l] - outputs[k][l]) < 0.1)) {
+                    if (!(Math.abs(output[l] - outputs[k][l]) < 0.1)) {
                         check = false;
                     }
                 }
-                if(check) {
+                if (check) {
                     apprentissage[k] = true;
                 }
-
             }
 
             nbInter++;
