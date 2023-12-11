@@ -42,7 +42,38 @@ public class MainMLP {
 
         int maxRep = ArgParse.getMaxRep(args);
 
+        boolean appris = false;
+        int nbInter = 0;
         //* vrai si tous les exemples passent sans erreur *//*
-        mlp.train(inputs, outputs, maxRep);
+
+        Boolean[] apprentissage = new Boolean[inputs.length];
+        Arrays.fill(apprentissage, false);
+
+        while(Arrays.asList(apprentissage).contains(false) && nbInter < maxRep){
+            for(int i =0; i< 10; i++) {
+               for (int j = 0; j < inputs.length; j++) {
+                   mlp.backPropagate(inputs[j], outputs[j]);
+               }
+            }
+
+            for (int k = 0; k < inputs.length; k++) {
+                double[] output = mlp.execute(inputs[k]);
+                if(Math.abs(output[0] - outputs[k][0]) < 0.1) {
+                    apprentissage[k] = true;
+                }
+            }
+
+            nbInter++;
+        }
+        if (nbInter < maxRep) {
+            System.out.println("Apprentissage réussi");
+            System.out.println("Etat final : ");
+            for (int i = 0; i < inputs.length; i++) {
+                System.out.println("Input : " + Arrays.toString(inputs[i]) + " Output : " + Arrays.toString(mlp.execute(inputs[i])));
+            }
+        } else {
+            System.out.println("Apprentissage échoué");
+        }
+        System.out.println("Nombre d'interations : " + nbInter);
     }
 }

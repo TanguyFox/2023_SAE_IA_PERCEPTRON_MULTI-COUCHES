@@ -25,10 +25,10 @@ public class MainKnnMlp {
                 + "-h    : afficher ceci (mettre à la fin)");
 
 
-        EtiquettesList trainingEtiquettesList = new EtiquettesList(new DataInputStream(new FileInputStream("./imagettes/train-labels.idx1-ubyte")));
+        EtiquettesList trainingEtiquettesList = new EtiquettesList(new DataInputStream(new FileInputStream("./knn_ressources/train-labels.idx1-ubyte")));
         Donnees trainingData = new Donnees();
 
-        DataInputStream imageFile = new DataInputStream(new FileInputStream("./imagettes/train-images.idx3-ubyte"));
+        DataInputStream imageFile = new DataInputStream(new FileInputStream("./knn_ressources/train-images.idx3-ubyte"));
         int typeFichier = imageFile.readInt();
         int nbImages = imageFile.readInt();
         int nbLignes = imageFile.readInt();
@@ -44,8 +44,8 @@ public class MainKnnMlp {
 
 
         Donnees testData = new Donnees();
-        EtiquettesList etiquettesList = new EtiquettesList(new DataInputStream(new FileInputStream("./imagettes/t10k-labels.idx1-ubyte")));
-        DataInputStream imageFileTest = new DataInputStream(new FileInputStream("./imagettes/t10k-images.idx3-ubyte"));
+        EtiquettesList etiquettesList = new EtiquettesList(new DataInputStream(new FileInputStream("./knn_ressources/t10k-labels.idx1-ubyte")));
+        DataInputStream imageFileTest = new DataInputStream(new FileInputStream("./knn_ressources/t10k-images.idx3-ubyte"));
         int typeFichierTest = imageFileTest.readInt();
         int nbImagesTest = imageFileTest.readInt();
         int nbLignesTest = imageFileTest.readInt();
@@ -70,6 +70,7 @@ public class MainKnnMlp {
         TransferFunction transferFunction = ArgParse.makeFunction(func);
 
         MLP mlp = new MLP(layersInt, learningRate, transferFunction);
+
 
     }
 

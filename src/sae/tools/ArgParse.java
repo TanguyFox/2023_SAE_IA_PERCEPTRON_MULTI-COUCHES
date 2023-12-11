@@ -139,7 +139,7 @@ public class ArgParse {
 
     public static int[] makeLayers(String tab) {
         if (tab == null)
-            tab = "[2, 1]";
+            tab = "[2,1]";
 
         if (!tab.startsWith("[") || !tab.endsWith("]")) {
             System.out.println("Erreur dans le format du tableau");

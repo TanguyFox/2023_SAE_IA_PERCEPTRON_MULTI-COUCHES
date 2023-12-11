@@ -118,6 +118,7 @@ public class MLP  {
     }
 
     public void train(double[][] inputs, double[][] outputs, int maxRep) {
+
         int nbRep = 0;
         boolean appris = false;
         boolean[] apprentissage = new boolean[inputs.length];
@@ -156,7 +157,6 @@ public class MLP  {
             System.out.println("Non appris !");
         }
         System.out.println("Nombre d'iterations : " + nbRep);
-
 
     }
 
