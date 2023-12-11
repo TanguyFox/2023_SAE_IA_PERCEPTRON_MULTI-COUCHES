@@ -21,7 +21,7 @@ public class MainMLP {
         ArgParse.setUsage("Utilisation :\n\n"
                 + "java MainMLP [-tab output] [-func transferFunc] [-layers layersTab] [-lr learningRate]"
                 + "[-v] [-h]\n"
-                + "-out : Le tableau de sortie désiré {and, or, xor}. Par défautl and\n"
+                + "-des : Le tableau de sortie désiré {and, or, xor}. Par défautl and\n"
                 + "-func : La fonction de transfert {sig, tanh}. Par défault sig\n"
                 + "-layers : Le tableau des couches {1, 2, 3}. Par défaut [2, 1]\n"
                 + "-max : Le nombre maximum d'itérations. Par défaut 5000\n"
