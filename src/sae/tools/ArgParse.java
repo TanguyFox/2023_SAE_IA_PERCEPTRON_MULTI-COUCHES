@@ -123,11 +123,11 @@ public class ArgParse {
             tab = "and";
         switch (tab) {
             case "and":
-                return new double[][]{{0}, {0}, {0}, {1}};
+                return Constantes.OUTPUT_BINARY2_AND;
             case "or":
-                return new double[][]{{0}, {1}, {1}, {1}};
+                return Constantes.OUTPUT_BINARY2_OR;
             case "xor":
-                return new double[][]{{0}, {1}, {1}, {0}};
+                return Constantes.OUTPUT_BINARY2_XOR;
             default:
                 System.out.println("Table inconnu");
                 usage();
