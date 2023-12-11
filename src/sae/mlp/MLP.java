@@ -2,6 +2,9 @@ package sae.mlp;
 
 import sae.function.TransferFunction;
 
+import java.util.Arrays;
+import java.util.Random;
+
 public class MLP  {
     protected double fLearningRate = 0.6;
     protected Layer[] fLayers;
@@ -112,6 +115,49 @@ public class MLP  {
         }
         error = error / output.length;
         return error;
+    }
+
+    public void train(double[][] inputs, double[][] outputs, int maxRep) {
+        int nbRep = 0;
+        boolean appris = false;
+        boolean[] apprentissage = new boolean[inputs.length];
+        Arrays.fill(apprentissage, false);
+
+        while (!appris && nbRep < maxRep) {
+
+            Random random = new Random();
+            int ligne = random.nextInt(apprentissage.length);
+
+            while (apprentissage[ligne]) {
+                ligne = random.nextInt(apprentissage.length);
+            }
+
+            double sortie = backPropagate(inputs[ligne], outputs[ligne]);
+
+            if (sortie < 0.1) {
+                apprentissage[ligne] = true;
+                for (boolean b : apprentissage) {
+                    if (!b) {
+                        appris = false;
+                        break;
+                    }
+                    appris = true;
+                }
+            } else {
+                Arrays.fill(apprentissage, false);
+            }
+            if (nbRep % 100 == 0) System.out.println("Différence sortie désirée / sortie obtenue : " + sortie);
+            nbRep++;
+        }
+
+        if (appris) {
+            System.out.println("Appris !");
+        } else {
+            System.out.println("Non appris !");
+        }
+        System.out.println("Nombre d'iterations : " + nbRep);
+
+
     }
 
     /**
