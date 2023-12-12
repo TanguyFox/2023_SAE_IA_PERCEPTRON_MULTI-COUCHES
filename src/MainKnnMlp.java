@@ -77,39 +77,39 @@ public class MainKnnMlp {
         int nbInter = 0;
         //* vrai si tous les exemples passent sans erreur *//*
 
+//
+//        Boolean[] apprentissage = new Boolean[inputs.length];
+//        Arrays.fill(apprentissage, false);
 
-        Boolean[] apprentissage = new Boolean[inputs.length];
-        Arrays.fill(apprentissage, false);
-
-        while(Arrays.asList(apprentissage).contains(false) && nbInter < maxRep){
-            for(int i =0; i< 10; i++) {
-                for (int j = 0; j < inputs.length; j++) {
-                    mlp.backPropagate(inputs[j], imagette.getOuput());
-                }
-            }
-
-            for (int k = 0; k < inputs.length; k++) {
-                double[] output = mlp.execute(inputs[k]);
-                for (int i = 0; i < output.length; i++) {
-                    if(Math.abs(output[i] - imagette.getOuput()[i]) < 0.1) {
-                        System.out.println("Sortie : " + Arrays.toString(output) + " Sortie désirée : " + Arrays.toString(imagette.getOuput()));
-                        apprentissage[k] = true;
-                    }
-                }
-            }
-
-            nbInter++;
-        }
-    }
-        if (nbInter < maxRep) {
-            System.out.println("\nApprentissage réussi\n");
-        } else {
-            System.out.println("Apprentissage échoué");
-        }
-        System.out.println("Nombre d'interations : " + nbInter);
-
-        System.out.println("Test : ");
-        System.out.println(Arrays.toString(mlp.execute(testData.imagettes.get(0).imgTab[0])) + " attendu : " + testData.imagettes.get(0).etiquette);
+//        while(Arrays.asList(apprentissage).contains(false) && nbInter < maxRep){
+//            for(int i =0; i< 10; i++) {
+//                for (int j = 0; j < inputs.length; j++) {
+//                    mlp.backPropagate(inputs[j], imagette.getOuput());
+//                }
+//            }
+//
+//            for (int k = 0; k < inputs.length; k++) {
+//                double[] output = mlp.execute(inputs[k]);
+//                for (int i = 0; i < output.length; i++) {
+//                    if(Math.abs(output[i] - imagette.getOuput()[i]) < 0.1) {
+//                        System.out.println("Sortie : " + Arrays.toString(output) + " Sortie désirée : " + Arrays.toString(imagette.getOuput()));
+//                        apprentissage[k] = true;
+//                    }
+//                }
+//            }
+//
+//            nbInter++;
+//        }
+//    }
+//        if (nbInter < maxRep) {
+//            System.out.println("\nApprentissage réussi\n");
+//        } else {
+//            System.out.println("Apprentissage échoué");
+//        }
+//        System.out.println("Nombre d'interations : " + nbInter);
+//
+//        System.out.println("Test : ");
+//        System.out.println(Arrays.toString(mlp.execute(testData.imagettes.get(0).imgTab[0])) + " attendu : " + testData.imagettes.get(0).etiquette);
 
     }
 
