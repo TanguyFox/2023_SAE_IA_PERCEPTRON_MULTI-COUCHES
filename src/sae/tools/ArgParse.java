@@ -123,7 +123,7 @@ public class ArgParse {
             tab = "and";
         switch (tab) {
             case "and":
-                return Constantes.OUTPUT_BINARY2_AND2;
+                return Constantes.OUTPUT_BINARY2_AND;
             case "or":
                 return Constantes.OUTPUT_BINARY2_OR;
             case "xor":
