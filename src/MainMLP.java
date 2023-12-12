@@ -29,8 +29,8 @@ public class MainMLP {
         String layers = ArgParse.getLayersFromCmd(args);
         String out = ArgParse.getTabFromCmd(args);
 
-        double[][] inputs = Constantes.INPUT_BINARY2;
-        double[][] outputs = Constantes.OUTPUT_BINARY2_XOR2;
+        double[][] inputs = Constantes.INPUT_BINARY2_SHUFFLE;
+        double[][] outputs = Constantes.OUTPUT_BINARY2_XOR2D_SHUFFLE;
         int[] layersInt = ArgParse.makeLayers(layers);
         TransferFunction transferFunction = ArgParse.makeFunction(func);
 
