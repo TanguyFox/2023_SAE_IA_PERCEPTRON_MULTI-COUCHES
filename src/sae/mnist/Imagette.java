@@ -1,22 +1,18 @@
-package sae.knn;
+package sae.mnist;
 
-import javax.imageio.ImageIO;
-import java.awt.image.BufferedImage;
 import java.io.DataInputStream;
-import java.io.File;
-import java.io.IOException;
 
 public class Imagette {
 
     public double[][] imgTab;
     public int etiquette;
 
-    public Imagette(DataInputStream imageFile, int nbLignes, int nbCols, int etiquette) {
+   public Imagette(DataInputStream imageFile, int nbLignes, int nbCols, int etiquette) {
         try {
             this.imgTab = new double[nbLignes][nbCols];
             for (int j = 0; j < nbLignes; j++) {
                 for (int k = 0; k < nbCols; k++) {
-                    imgTab[k][j] = imageFile.readUnsignedByte();
+                    imgTab[k][j] = imageFile.readUnsignedByte() / 255.0;
                 }
             }
             this.etiquette = etiquette;
