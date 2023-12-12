@@ -1,28 +1,27 @@
 import sae.function.TransferFunction;
 import sae.mlp.MLP;
 import sae.tools.ArgParse;
-import sae.knn.*;
+import sae.mnist.*;
 
 import java.io.DataInputStream;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Arrays;
 
-public class MainKnnMlp {
+public class MainMlpMnist {
 
     public static void main(String[] args) throws IOException {
 
         ArgParse.setUsage("Utilisation :\n\n"
                 + "java MainMLP [-des output] [-func transferFunc] [-lay layersTab] [-lr learningRate] [-max maxRep]"
                 + "[-v] [-h]\n"
-                + "-des : Le tableau de sortie désiré {and, or, xor}. Par défaut and\n"
                 + "-func : La fonction de transfert {sig, tanh}. Par défault sig\n"
                 + "-lay : Le tableau des couches {1, 2, 3}. Par défaut [2, 1]\n"
                 + "-max : Le nombre maximum d'itérations. Par défaut 5000\n"
                 + "-lr : Le taux d'apprentissage. Par défaut 0.6\n"
                 + "-v    : Rendre bavard (mettre à la fin)\n"
-                + "-h    : afficher ceci (mettre à la fin)");
+                + "-h    : afficher ceci (mettre à la fin)"
+        );
 
 
         EtiquettesList trainingEtiquettesList = new EtiquettesList(new DataInputStream(new FileInputStream("./knn_ressources/train-labels.idx1-ubyte")));
@@ -34,15 +33,17 @@ public class MainKnnMlp {
         int nbLignes = imageFile.readInt();
         int nbCols = imageFile.readInt();
 
+        System.out.println("Processing training data...");
+
         int compteur = 0;
-        while (compteur < 6000) {
+        while (compteur < nbImages) {
             Imagette trainingImagette = new Imagette(imageFile, nbLignes, nbCols, trainingEtiquettesList.labels.get(compteur));
             trainingData.imagettes.add(trainingImagette);
             compteur++;
         }
         imageFile.close();
-
-
+        System.out.println("Training data processed.");
+        System.out.println("Processing test data...");
         Donnees testData = new Donnees();
         EtiquettesList etiquettesList = new EtiquettesList(new DataInputStream(new FileInputStream("./knn_ressources/t10k-labels.idx1-ubyte")));
         DataInputStream imageFileTest = new DataInputStream(new FileInputStream("./knn_ressources/t10k-images.idx3-ubyte"));
@@ -53,14 +54,14 @@ public class MainKnnMlp {
         int compteurTest = 0;
 
 
-        while (compteurTest < 1000) {
+        while (compteurTest < nbImagesTest) {
             Imagette testImagette = new Imagette(imageFileTest, nbLignesTest, nbColsTest, etiquettesList.labels.get(compteurTest));
             testData.imagettes.add(testImagette);
             compteurTest++;
         }
         imageFileTest.close();
 
-
+        System.out.println("Test data processed.");
         double learningRate = ArgParse.getLearningRate(args);
         String func = ArgParse.getFunctionFromCmd(args);
         String layers = ArgParse.getLayersFromCmd(args);
@@ -73,44 +74,40 @@ public class MainKnnMlp {
 
         int maxRep = ArgParse.getMaxRep(args);
 
-        boolean appris = false;
         int nbInter = 0;
-        //* vrai si tous les exemples passent sans erreur *//*
 
+        Statistiques stats = new Statistiques();
+        double reussite = 0;
 
-        Boolean[] apprentissage = new Boolean[inputs.length];
-        Arrays.fill(apprentissage, false);
+        System.out.println("Start learning...");
+        while (reussite < 98 && nbInter < maxRep) {
+            System.out.println("Shuffling data...");
+            trainingData.shuffleImagettes();
+            double averageError = 0;
 
-        while(Arrays.asList(apprentissage).contains(false) && nbInter < maxRep){
-            for(int i =0; i< 10; i++) {
-                for (int j = 0; j < inputs.length; j++) {
-                    mlp.backPropagate(inputs[j], imagette.getOuput());
+            for (int i = 0; i < 10; i++) {
+                double error = 0;
+                for (Imagette imagette : trainingData.imagettes) {
+                    double[] pixels = Arrays.stream(imagette.imgTab).flatMapToDouble(Arrays::stream).toArray();
+                    error = mlp.backPropagate(pixels, imagette.getOuput());
                 }
+                averageError += error;
             }
 
-            for (int k = 0; k < inputs.length; k++) {
-                double[] output = mlp.execute(inputs[k]);
-                for (int i = 0; i < output.length; i++) {
-                    if(Math.abs(output[i] - imagette.getOuput()[i]) < 0.1) {
-                        System.out.println("Sortie : " + Arrays.toString(output) + " Sortie désirée : " + Arrays.toString(imagette.getOuput()));
-                        apprentissage[k] = true;
-                    }
-                }
-            }
 
+
+
+
+            reussite = stats.calculerStats(testData, mlp);
+            System.out.println("Iteration n° " + nbInter + "\n\t - Erreur moyenne : " + averageError / (10 * trainingData.imagettes.size()));
+            System.out.println("\t- Taux de réussite : " + reussite + "%");
             nbInter++;
         }
-    }
-        if (nbInter < maxRep) {
-            System.out.println("\nApprentissage réussi\n");
-        } else {
-            System.out.println("Apprentissage échoué");
-        }
+
         System.out.println("Nombre d'interations : " + nbInter);
-
-        System.out.println("Test : ");
-        System.out.println(Arrays.toString(mlp.execute(testData.imagettes.get(0).imgTab[0])) + " attendu : " + testData.imagettes.get(0).etiquette);
-
+        System.out.println("Test :");
+        System.out.println("Image d'un " + testData.imagettes.get(5).etiquette + " : \n"
+                + Arrays.toString(mlp.execute(testData.imagettes.get(5).imgTab[0]))
+                + "\n" + Arrays.toString(testData.imagettes.get(5).getOuput()));
     }
-
 }

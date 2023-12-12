@@ -1,4 +1,4 @@
-package sae.knn;
+package sae.mnist;
 
 import java.io.DataInputStream;
 import java.io.IOException;
