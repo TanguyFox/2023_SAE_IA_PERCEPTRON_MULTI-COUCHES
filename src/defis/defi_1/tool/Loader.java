@@ -73,7 +73,7 @@ public class Loader {
         }
 
         HashMap<String, Ville> res = new HashMap<>();
-        for (int i = 0; i < 13; i++) {
+        for (int i = 0; i < 10; i++) {
             Ville n = villes.poll();
             assert n != null;
 
