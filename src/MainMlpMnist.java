@@ -74,15 +74,17 @@ public class MainMlpMnist {
 
         int maxRep = ArgParse.getMaxRep(args);
 
-        int nbInter = 0;
+        int nbInterTrain = 1;
+        int nbInterTest = 1;
 
         Statistiques stats = new Statistiques();
-        double reussite = 0;
+        double reussiteTrain = 0;
+        double reussiteTest = 0;
 
         System.out.println("Start learning...");
-        while (reussite < 98 && nbInter < maxRep) {
-            System.out.println("Shuffling data...");
-            trainingData.shuffleImagettes();
+        while (reussiteTest < 98.0 && nbInterTest <= maxRep) {
+//            System.out.println("Shuffling data...");
+//            trainingData.shuffleImagettes();
             double averageError = 0;
 
             for (int i = 0; i < 10; i++) {
@@ -94,17 +96,26 @@ public class MainMlpMnist {
                 averageError += error;
             }
 
+            System.out.println("Iteration n° " + nbInterTest + "\n\t- Erreur moyenne : " + averageError / (10 * trainingData.imagettes.size()));
+
+            if(reussiteTrain < 98.0) {
+                reussiteTrain = stats.calculerStats(trainingData, mlp);
+                System.out.println("\t - Taux de réussite sur la base d'apprentissage : " + reussiteTrain + "%");
+                nbInterTrain++;
+            } else {
+                System.out.println("base d'apprentissage apprise en " + nbInterTrain + " itérations");
+            }
 
 
 
 
-            reussite = stats.calculerStats(testData, mlp);
-            System.out.println("Iteration n° " + nbInter + "\n\t - Erreur moyenne : " + averageError / (10 * trainingData.imagettes.size()));
-            System.out.println("\t- Taux de réussite : " + reussite + "%");
-            nbInter++;
+            reussiteTest = stats.calculerStats(testData, mlp);
+            System.out.println("Iteration n° " + nbInterTest + "\n\t - Erreur moyenne : " + averageError / (10 * trainingData.imagettes.size()));
+            System.out.println("\t- Taux de réussite sur la base de test : " + reussiteTest + "%");
+            nbInterTest++;
         }
 
-        System.out.println("Nombre d'interations : " + nbInter);
+        System.out.println("Nombre d'interations : " + nbInterTest);
         System.out.println("Test :");
         System.out.println("Image d'un " + testData.imagettes.get(5).etiquette + " : \n"
                 + Arrays.toString(mlp.execute(testData.imagettes.get(5).imgTab[0]))

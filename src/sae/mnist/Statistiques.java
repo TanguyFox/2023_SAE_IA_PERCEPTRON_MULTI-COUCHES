@@ -12,14 +12,15 @@ public class Statistiques {
         for (Imagette imagette : data.imagettes) {
             double[] pixels = Arrays.stream(imagette.imgTab).flatMapToDouble(Arrays::stream).toArray();
             double[] output = mlp.execute(pixels);
-            boolean check = true;
+            double max = Double.NEGATIVE_INFINITY;
+            int index = 0;
             for (int l = 0; l < mlp.getOutputLayerSize(); l++) {
-                if (!(Math.abs(output[l] - imagette.getOuput()[l]) < 0.1)) {
-                    check = false;
-                    break;
+                if (output[l] > max) {
+                    max = output[l];
+                    index = l;
                 }
             }
-            if (check) {
+            if(index == imagette.etiquette) {
                 nbCorrect++;
             } else {
                 nbIncorrect++;
