@@ -6,7 +6,14 @@ import defis.defi_1.tool.Loader;
 
 import java.util.*;
 
-public class MainDefi1 {
+
+/**
+ * Cherche le chemin le plus court entre toutes les villes
+ * À chaque fois, placer le nœud le plus proche du point de départ
+ * dans la file de priorité. Lorsqu'un nœud n'a plus d'endroit où aller,
+ * c'est-à-dire qu'un chemin le plus court a été trouvé.
+ */
+public class MainDefi1v1 {
     public static void main(String[] args) {
         HashMap<String, Ville> villes = Loader.loadArrays("ressources/communes.json");
 
@@ -82,9 +89,6 @@ public class MainDefi1 {
             System.out.println("↑");
             bestNode = bestNode.getNodeParents();
         }
-
-
-
 
     }
 }
