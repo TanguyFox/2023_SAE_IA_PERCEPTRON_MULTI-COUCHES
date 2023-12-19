@@ -30,9 +30,11 @@ public class MainMLP {
         String out = ArgParse.getTabFromCmd(args);
 
         double[][] inputs = Constantes.INPUT_BINARY2_SHUFFLE;
-        double[][] outputs = Constantes.OUTPUT_BINARY2_XOR2D_SHUFFLE;
+        double[][] outputs = Constantes.OUTPUT_BINARY2_AND_SHUFFLE;
         int[] layersInt = ArgParse.makeLayers(layers);
         TransferFunction transferFunction = ArgParse.makeFunction(func);
+
+        long startTime = System.currentTimeMillis();
 
         MLP mlp = new MLP(layersInt, learningRate, transferFunction);
 
@@ -72,7 +74,11 @@ public class MainMLP {
 
             nbInter++;
         }
+
+        long endTime;
+
         if (nbInter < maxRep) {
+            endTime = System.currentTimeMillis();
             System.out.println("\nApprentissage réussi\n");
             System.out.println("Etat final : ");
             for (int i = 0; i < inputs.length; i++) {
@@ -80,8 +86,13 @@ public class MainMLP {
             }
             System.out.println("Poids finaux : ");
         } else {
+            endTime = System.currentTimeMillis();
             System.out.println("Apprentissage échoué");
         }
+
         System.out.println("Nombre d'interations : " + nbInter);
+        System.out.println("Temps d'execution : " + (endTime - startTime) + " ms");
+
+
     }
 }

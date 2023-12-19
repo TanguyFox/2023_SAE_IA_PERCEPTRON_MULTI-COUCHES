@@ -11,8 +11,8 @@ public class Position {
     private double latitude;
 
     public Position(double longitude, double latitude) {
-        this.longitude = longitude;
-        this.latitude = latitude;
+        this.longitude = Math.toRadians(longitude);
+        this.latitude = Math.toRadians(latitude);
     }
 
     public double getLongitude() {
@@ -24,7 +24,7 @@ public class Position {
     }
 
     public String getPosDegree() {
-        return "longitude : " + Math.toDegrees(longitude) + " latitude : " + Math.toDegrees(latitude);
+        return "longitude: " + Math.toDegrees(longitude) + " | latitude: " + Math.toDegrees(latitude);
     }
 
 

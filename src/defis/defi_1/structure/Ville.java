@@ -41,4 +41,7 @@ public class Ville {
         return population;
     }
 
+    public double getCoefficient() {
+        return coefficient;
+    }
 }
