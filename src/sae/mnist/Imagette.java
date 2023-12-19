@@ -1,6 +1,7 @@
 package sae.mnist;
 
 import java.io.DataInputStream;
+import java.util.Arrays;
 
 public class Imagette {
 
@@ -31,6 +32,10 @@ public class Imagette {
         }
         ImageIO.write(img, "png", new File("./img/" + fileName + ".png"));
     }*/
+
+    public double[] getPixels() {
+        return Arrays.stream(this.imgTab).flatMapToDouble(Arrays::stream).toArray();
+    }
 
     public double[] getOuput() {
         switch (this.etiquette) {

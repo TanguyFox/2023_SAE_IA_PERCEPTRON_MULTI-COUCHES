@@ -2,11 +2,14 @@ import sae.function.TransferFunction;
 import sae.mlp.MLP;
 import sae.tools.ArgParse;
 import sae.mnist.*;
+import sae.tools.ExportToCSV;
 
 import java.io.DataInputStream;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 public class MainMlpMnist {
 
@@ -24,10 +27,10 @@ public class MainMlpMnist {
         );
 
 
-        EtiquettesList trainingEtiquettesList = new EtiquettesList(new DataInputStream(new FileInputStream("./knn_ressources/train-labels.idx1-ubyte")));
+        EtiquettesList trainingEtiquettesList = new EtiquettesList(new DataInputStream(new FileInputStream("./ressources/mnist/train-labels.idx1-ubyte")));
         Donnees trainingData = new Donnees();
 
-        DataInputStream imageFile = new DataInputStream(new FileInputStream("./knn_ressources/train-images.idx3-ubyte"));
+        DataInputStream imageFile = new DataInputStream(new FileInputStream("./ressources/mnist/train-images.idx3-ubyte"));
         int typeFichier = imageFile.readInt();
         int nbImages = imageFile.readInt();
         int nbLignes = imageFile.readInt();
@@ -43,10 +46,11 @@ public class MainMlpMnist {
         }
         imageFile.close();
         System.out.println("Training data processed.");
+
         System.out.println("Processing test data...");
         Donnees testData = new Donnees();
-        EtiquettesList etiquettesList = new EtiquettesList(new DataInputStream(new FileInputStream("./knn_ressources/t10k-labels.idx1-ubyte")));
-        DataInputStream imageFileTest = new DataInputStream(new FileInputStream("./knn_ressources/t10k-images.idx3-ubyte"));
+        EtiquettesList etiquettesList = new EtiquettesList(new DataInputStream(new FileInputStream("./ressources/mnist/t10k-labels.idx1-ubyte")));
+        DataInputStream imageFileTest = new DataInputStream(new FileInputStream("./ressources/mnist/t10k-images.idx3-ubyte"));
         int typeFichierTest = imageFileTest.readInt();
         int nbImagesTest = imageFileTest.readInt();
         int nbLignesTest = imageFileTest.readInt();
@@ -74,51 +78,53 @@ public class MainMlpMnist {
 
         int maxRep = ArgParse.getMaxRep(args);
 
-        int nbInterTrain = 1;
         int nbInterTest = 1;
 
         Statistiques stats = new Statistiques();
         double reussiteTrain = 0;
         double reussiteTest = 0;
 
+        List<String[]> data = new ArrayList<>();
+        String[] header = {"Iteration", "Taux d'erreur'", "Taux de réussite sur la base de test"};
+        data.add(header);
+
         System.out.println("Start learning...");
-        while (reussiteTest < 98.0 && nbInterTest <= maxRep) {
+        while (reussiteTest < 98 && nbInterTest <= maxRep) {
 //            System.out.println("Shuffling data...");
 //            trainingData.shuffleImagettes();
             double averageError = 0;
 
+            System.out.println("Iteration " + nbInterTest + " start");
+            double error = 0;
             for (int i = 0; i < 10; i++) {
-                double error = 0;
+
                 for (Imagette imagette : trainingData.imagettes) {
-                    double[] pixels = Arrays.stream(imagette.imgTab).flatMapToDouble(Arrays::stream).toArray();
-                    error = mlp.backPropagate(pixels, imagette.getOuput());
+                    error += mlp.backPropagate(imagette.getPixels(), imagette.getOuput());
                 }
-                averageError += error;
             }
 
-            System.out.println("Iteration n° " + nbInterTest + "\n\t- Erreur moyenne : " + averageError / (10 * trainingData.imagettes.size()));
+            System.out.println("\n\t- Erreur : " + error);
 
-            if(reussiteTrain < 98.0) {
-                reussiteTrain = stats.calculerStats(trainingData, mlp);
-                System.out.println("\t - Taux de réussite sur la base d'apprentissage : " + reussiteTrain + "%");
-                nbInterTrain++;
-            } else {
-                System.out.println("base d'apprentissage apprise en " + nbInterTrain + " itérations");
-            }
-
-
+            reussiteTrain = stats.calculerStats(trainingData, mlp);
+            System.out.println("\t- Taux de réussite sur la base d'apprentissage : " + reussiteTrain + "%");
 
 
             reussiteTest = stats.calculerStats(testData, mlp);
-            System.out.println("Iteration n° " + nbInterTest + "\n\t - Erreur moyenne : " + averageError / (10 * trainingData.imagettes.size()));
+
             System.out.println("\t- Taux de réussite sur la base de test : " + reussiteTest + "%");
-            nbInterTest++;
+            String[] line = {String.valueOf(nbInterTest), String.valueOf(error), String.valueOf(reussiteTest)};
+            data.add(line);
+           nbInterTest++;
+
         }
 
+        ExportToCSV.export(data);
+
+
         System.out.println("Nombre d'interations : " + nbInterTest);
-        System.out.println("Test :");
-        System.out.println("Image d'un " + testData.imagettes.get(5).etiquette + " : \n"
-                + Arrays.toString(mlp.execute(testData.imagettes.get(5).imgTab[0]))
-                + "\n" + Arrays.toString(testData.imagettes.get(5).getOuput()));
+//        System.out.println("Test :");
+//        System.out.println("Image d'un " + testData.imagettes.get(5).etiquette + " : \n"
+//                + Arrays.toString(mlp.execute(testData.imagettes.get(5).getPixels()))
+//                + "\n" + Arrays.toString(testData.imagettes.get(5).getOuput()));
     }
 }

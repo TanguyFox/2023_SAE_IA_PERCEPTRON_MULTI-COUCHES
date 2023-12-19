@@ -78,6 +78,7 @@ public class MainMLP {
             for (int i = 0; i < inputs.length; i++) {
                 System.out.println("\tInput : " + Arrays.toString(inputs[i]) + " Output : " + Arrays.toString(mlp.execute(inputs[i])) + " Output désiré : " + Arrays.toString(outputs[i]));
             }
+            System.out.println("Poids finaux : ");
         } else {
             System.out.println("Apprentissage échoué");
         }
