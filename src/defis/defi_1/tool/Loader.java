@@ -6,9 +6,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 import org.json.JSONTokener;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
@@ -45,8 +43,8 @@ public class Loader {
                 .getJSONObject("geometry")
                 .getJSONArray("coordinates");
 
-        double longitude = Math.toRadians(jsonArray.getDouble(0));
-        double latitude = Math.toRadians(jsonArray.getDouble(1));
+        double longitude = jsonArray.getDouble(0);
+        double latitude = jsonArray.getDouble(1);
         return new Position(longitude, latitude);
     }
 
@@ -61,9 +59,7 @@ public class Loader {
                 JSONObject jsonObject = jsonArray.getJSONObject(i);
                 String nom_ville = jsonObject.getString("nom");
                 int population = jsonObject.optInt("population", 0);
-
 //                System.out.println(nom_ville + " " + population);
-
                 Ville ville = new Ville(nom_ville);
                 ville.setPopulation(population);
                 villes.add(ville);
@@ -73,14 +69,13 @@ public class Loader {
         }
 
         HashMap<String, Ville> res = new HashMap<>();
-        for (int i = 0; i < 10; i++) {
+        for (int i = 0; i < 100 && !villes.isEmpty(); i++) {
             Ville n = villes.poll();
-            assert n != null;
 
 //            System.out.println(i + ": " + n.getNom_ville());
             n.setPosition(loadPosition(n.getNom_ville().replace(" ", "+")));
 
-            if(i < 10){
+            if(i < 50){
                 n.setCoefficientClass(1);
             }else{
                 n.setCoefficientClass(2);
@@ -89,6 +84,58 @@ public class Loader {
         }
 
         return res;
+    }
+
+    public static HashMap<String, Ville> loadArraysLocal(String path) {
+        PriorityQueue<Ville> villes = new PriorityQueue<>((o1, o2) -> Integer.compare(o2.getPopulation(), o1.getPopulation()));
+        try {
+            JSONTokener tokener = new JSONTokener(new FileReader(path));
+            JSONArray jsonArray = new JSONArray(tokener);
+            for (int i = 0; i < jsonArray.length(); i++) {
+                JSONObject jsonObject = jsonArray.getJSONObject(i);
+                String nom_ville = jsonObject.getString("nom");
+                int population = jsonObject.optInt("population", 0);
+
+                Ville ville = new Ville(nom_ville);
+                ville.setPopulation(population);
+                ville.setPosition(new Position(
+                        jsonObject.getDouble("longitude"),
+                        jsonObject.getDouble("latitude")
+                ));
+                villes.add(ville);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        HashMap<String, Ville> res = new HashMap<>();
+        for (int i = 0; i < 100 && !villes.isEmpty(); i++) {
+            Ville n = villes.poll();
+
+            if (i < 50) {
+                n.setCoefficientClass(1);
+            } else {
+                n.setCoefficientClass(2);
+            }
+            res.put(n.getNom_ville(), n);
+        }
+
+        return res;
+    }
+
+    public static void saveCities(HashMap<String, Ville> cities, String outputPath) {
+        try (FileWriter writer = new FileWriter(outputPath)) {
+            for (Ville city : cities.values()) {
+                JSONObject cityJson = new JSONObject();
+                cityJson.put("nom", city.getNom_ville());
+                cityJson.put("population", city.getPopulation());
+                cityJson.put("longitude", Math.toDegrees(city.getPosition().getLongitude()));
+                cityJson.put("latitude", Math.toDegrees(city.getPosition().getLatitude()));
+                writer.write(cityJson.toString() + "\n");
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
 }

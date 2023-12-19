@@ -15,14 +15,14 @@ import java.util.*;
  */
 public class MainDefi1v1 {
     public static void main(String[] args) {
-        HashMap<String, Ville> villes = Loader.loadArrays("ressources/communes.json");
+        HashMap<String, Ville> villes = Loader.loadArraysLocal("ressources/villes.json");
 
         Scanner scanner = new Scanner(System.in);
-        System.out.print("latitude :");
+//        System.out.print("latitude :");
 //        double latitude_depart = scanner.nextDouble();
         double latitude_depart = 40;
 
-        System.out.print("longitude :");
+//        System.out.print("longitude :");
 //        double longitude_depart = scanner.nextDouble();
         double longitude_depart = 3;
 
@@ -43,17 +43,6 @@ public class MainDefi1v1 {
             priorityQueue.add(node);
         }
 
-//        while(!priorityQueue.isEmpty()){
-//            Node node = priorityQueue.poll();
-//            System.out.println(node.getNom_ville() + " : " + node.getDistance());
-//            System.out.println("[");
-//            for(String ville_name : node.getNodeEnfants()){
-//                System.out.println(ville_name);
-//            }
-//            System.out.println("]");
-//        }
-
-
         boolean allVisited = false;
         Node bestNode = null;
 
@@ -65,7 +54,7 @@ public class MainDefi1v1 {
                 allVisited = true;
             } else {
                 for (String ville_name : node.getNodeEnfants()){
-                    Position positionCourrante = villes.get(node.getNom_ville()).getPosition();
+                    Position positionCourrante = villes.get(node.getNom()).getPosition();
 
                     double distance = Position.distanceEntre(positionCourrante, villes.get(ville_name).getPosition());
 
@@ -84,8 +73,8 @@ public class MainDefi1v1 {
 
         System.out.println("Le chemin le plus court: " + bestNode.getDistance() + " km");
         while(bestNode.getNodeParents() != null){
-            System.out.println(bestNode.getNom_ville() + " " + bestNode.getDistance() + " km");
-            System.out.println(villes.get(bestNode.getNom_ville()).getPosition().getPosDegree());
+            System.out.println(bestNode.getNom() + " " + bestNode.getDistance() + " km");
+            System.out.println(villes.get(bestNode.getNom()).getPosition().getPosDegree());
             System.out.println("↑");
             bestNode = bestNode.getNodeParents();
         }
