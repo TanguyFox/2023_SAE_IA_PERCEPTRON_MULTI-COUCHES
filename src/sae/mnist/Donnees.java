@@ -17,7 +17,7 @@ public class Donnees {
             Imagette temp = this.imagettes.get(randomIndexToSwap);
             this.imagettes.set(randomIndexToSwap, this.imagettes.get(i));
             this.imagettes.set(i, temp);
-            System.out.println("Data shuffled.");
         }
+        System.out.println("Data shuffled.");
     }
 }
