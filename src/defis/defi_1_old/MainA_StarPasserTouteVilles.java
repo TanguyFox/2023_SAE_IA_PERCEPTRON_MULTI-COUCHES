@@ -1,22 +1,19 @@
-package defis.defi_1;
+package defis.defi_1_old;
 
-import defis.defi_1.structure.Node;
-import defis.defi_1.structure.Position;
-import defis.defi_1.structure.Ville;
-import defis.defi_1.tool.Loader;
+import defis.defi_1_old.structure.Node;
+import defis.defi_1_old.structure.Position;
+import defis.defi_1_old.structure.Ville;
+import defis.defi_1_old.tool.Loader;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
+import java.util.*;
 
-public class MainDefi1v3 {
+public class MainA_StarPasserTouteVilles {
     public static void main(String[] args) {
-        HashMap<String, Ville> villes = Loader.loadArraysLocal("ressources/villes.json");
-        double latitude_depart = 40;
-        double longitude_depart = 3;
-
-        double latitude_arrivee = 48.6;
-        double longitude_arrivee = 7;
+        HashMap<String, Ville> villes = Loader.loadArraysLocal("ressources/villes.json", 8);
+        double latitude_depart = 45;
+        double longitude_depart = 5;
+        double latitude_arrivee = 44;
+        double longitude_arrivee = 3;
 
         int mode = 1;
 
@@ -26,12 +23,16 @@ public class MainDefi1v3 {
             }
         }
 
+        double startTime = System.currentTimeMillis();
+
         Position depart = new Position(longitude_depart, latitude_depart);
         Position arrivee = new Position(longitude_arrivee, latitude_arrivee);
 
-        ArrayList<String> children = new ArrayList<>(villes.keySet());
 
-        ArrayList<Node> frontier = new ArrayList<>();
+        ArrayList<String> children = new ArrayList<>(villes.keySet());
+        Comparator<Node> nodeComparator = Comparator.comparingDouble(Node::getTotalDistance);
+        PriorityQueue<Node> frontier = new PriorityQueue<>(nodeComparator);
+
         Node node_depart = new Node("Depart", 0, null, children);
         Ville ville_depart = new Ville("Depart");
         ville_depart.setPosition(depart);
@@ -51,7 +52,7 @@ public class MainDefi1v3 {
         Node end_node = null;
 
         while(!frontier.isEmpty()){
-            Node node = frontier.removeFirst();
+            Node node = frontier.poll();
             explored.add(node);
 
             if(node.getNodeEnfants().isEmpty()){
@@ -74,27 +75,18 @@ public class MainDefi1v3 {
                 childNode.setDistance_heuristique(Position.distanceEntre(villes.get(child).getPosition(), arrivee));
 
                 if (!explored.contains(childNode) && !frontier.contains(childNode)){
-
-                    int i = 0;
-                    while(i < frontier.size()){
-                        Node n = frontier.get(i);
-                        if(n.getDistance() + n.getDistance_heuristique() > childNode.getDistance() + childNode.getDistance_heuristique()){
-                            frontier.add(i, childNode);
-                            break;
-                        }
-                        i++;
-                    }
-                    if(i == frontier.size()){
-                        frontier.add(childNode);
-                    }
+                    frontier.add(childNode);
                 }
             }
+
         }
 
         Node node_arrivee = new Node("Arrivée",
                 end_node.getDistance() + Position.distanceEntre(arrivee, villes.get(end_node.getNom()).getPosition()) * 1,
                 end_node,
                 null);
+
+        double endTime = System.currentTimeMillis();
 
 
         double total_distance = 0;
@@ -108,6 +100,7 @@ public class MainDefi1v3 {
 
         System.out.println("Départ [longitude: " + longitude_depart + " | latitude: " + latitude_depart + "]");
         System.out.println("Total distance: " + total_distance + " km");
+        System.out.println("Temps de calcul: " + (endTime - startTime) + " ms");
 
     }
 }

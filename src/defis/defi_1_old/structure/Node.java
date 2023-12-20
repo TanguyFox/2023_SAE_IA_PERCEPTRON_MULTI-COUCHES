@@ -1,4 +1,4 @@
-package defis.defi_1.structure;
+package defis.defi_1_old.structure;
 
 import java.util.ArrayList;
 import java.util.Objects;
@@ -50,12 +50,12 @@ public class Node {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (!(o instanceof Node node)) return false;
-        return Double.compare(distance, node.distance) == 0 && Double.compare(distance_heuristique, node.distance_heuristique) == 0 && Objects.equals(nom_ville, node.nom_ville);
+        return Double.compare(distance, node.distance) == 0 && Objects.equals(nom_ville, node.nom_ville) && Objects.equals(nodeParent, node.nodeParent);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(nom_ville, distance, distance_heuristique);
+        return Objects.hash(nom_ville, nodeParent, distance);
     }
 
     public void setDistance(double distance) {

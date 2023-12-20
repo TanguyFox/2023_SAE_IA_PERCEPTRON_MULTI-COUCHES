@@ -1,4 +1,4 @@
-package defis.defi_1.structure;
+package defis.defi_1_old.structure;
 
 import java.util.Objects;
 

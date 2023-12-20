@@ -108,6 +108,23 @@ public class MLP  {
             }
         }
 
+        //print weights and delta
+        for (int l = 0; l < fLayers.length; l++) {
+        	System.out.println("Layer "+l);
+        	for (int m = 0; m < fLayers[l].Length; m++) {
+        		System.out.println("Neuron "+m);
+        		System.out.println("Weights "+Arrays.toString(fLayers[l].Neurons[m].Weights));
+        		System.out.println("Delta "+fLayers[l].Neurons[m].Delta);
+                System.out.println("Bias " + fLayers[l].Neurons[m].Bias);
+        	}
+            System.out.println("---");
+        }
+        System.out.println("+----------------------+");
+
+
+
+
+
         // Calcul de l'erreur
         error = 0.0;
         for(i = 0; i < output.length; i++) {
