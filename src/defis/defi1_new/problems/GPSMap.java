@@ -53,6 +53,7 @@ public class GPSMap extends Problem {
                                     cities.get(gpsMapState.getName()).getPosition(),
                                     cities.get(villes.get(j).getName()).getPosition()
                             ) * coefficient);
+//                    System.out.println("Transition de " + gpsMapState.getName() + " vers " + villes.get(j).getName() + " ajoutée");
                 }
             }
         }
@@ -75,6 +76,7 @@ public class GPSMap extends Problem {
                     actions.get(i),
                     villes.get(i),
                     Position.distanceEntre(point_depart, cities.get(villes.get(i).getName()).getPosition()));
+//            System.out.println("Transition de " + DEPART.getName() + " vers " + villes.get(i).getName() + " ajoutée");
         }
 
         for(int i = 0; i < villes.size(); i++){
@@ -82,6 +84,7 @@ public class GPSMap extends Problem {
                     actions.get(i),
                     ARRIVEE,
                     Position.distanceEntre(point_arrivee, cities.get(villes.get(i).getName()).getPosition()));
+//            System.out.println("Transition de " + villes.get(i).getName() + " vers " + ARRIVEE.getName() + " ajoutée");
         }
 
 //        for(int i = 0; i < STATES.length; i++){

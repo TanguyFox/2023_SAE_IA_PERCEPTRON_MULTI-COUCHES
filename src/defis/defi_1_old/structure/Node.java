@@ -50,12 +50,12 @@ public class Node {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (!(o instanceof Node node)) return false;
-        return Double.compare(distance, node.distance) == 0 && Objects.equals(nom_ville, node.nom_ville) && Objects.equals(nodeParent, node.nodeParent);
+        return Objects.equals(nom_ville, node.nom_ville);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(nom_ville, nodeParent, distance);
+        return Objects.hash(nom_ville);
     }
 
     public void setDistance(double distance) {
