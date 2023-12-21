@@ -1,7 +1,7 @@
-package defis.defi_1.tool;
+package defis.defi1.defi1_old.tool;
 
-import defis.defi_1.structure.Ville;
-import defis.defi_1.structure.Position;
+import defis.defi1.defi1_old.structure.Ville;
+import defis.defi1.defi1_old.structure.Position;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.json.JSONTokener;
@@ -86,7 +86,7 @@ public class Loader {
         return res;
     }
 
-    public static HashMap<String, Ville> loadArraysLocal(String path) {
+    public static HashMap<String, Ville> loadArraysLocal(String path, int nb_ville) {
         PriorityQueue<Ville> villes = new PriorityQueue<>((o1, o2) -> Integer.compare(o2.getPopulation(), o1.getPopulation()));
         try {
             JSONTokener tokener = new JSONTokener(new FileReader(path));
@@ -108,11 +108,14 @@ public class Loader {
             e.printStackTrace();
         }
 
+        nb_ville = Math.max(0, nb_ville);
+        nb_ville = Math.min(100, nb_ville);
+
         HashMap<String, Ville> res = new HashMap<>();
-        for (int i = 0; i < 100 && !villes.isEmpty(); i++) {
+        for (int i = 0; i < nb_ville && !villes.isEmpty(); i++) {
             Ville n = villes.poll();
 
-            if (i < 50) {
+            if (i < nb_ville / 2) {
                 n.setCoefficientClass(1);
             } else {
                 n.setCoefficientClass(2);

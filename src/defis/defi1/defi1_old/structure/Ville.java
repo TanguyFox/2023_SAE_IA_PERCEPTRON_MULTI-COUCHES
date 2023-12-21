@@ -1,4 +1,4 @@
-package defis.defi_1.structure;
+package defis.defi1.defi1_old.structure;
 
 public class Ville {
     private String nom_ville;
@@ -14,9 +14,9 @@ public class Ville {
 
     public void setCoefficientClass(int classe) {
         switch (classe){
-            case 1 -> this.coefficient = 0.5;
-            case 2 -> this.coefficient = 0.75;
-            case 3 -> this.coefficient = 1;
+            case 1 -> this.coefficient = 3;
+            case 2 -> this.coefficient = 5;
+            case 3 -> this.coefficient = 10;
             default -> throw new IllegalArgumentException("Classe inconnue");
         }
     }
