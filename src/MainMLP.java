@@ -13,14 +13,11 @@ public class MainMLP {
     public static void main(String[] args) {
 
         ArgParse.setUsage("Utilisation :\n\n"
-                + "java MainMLP [-des output] [-func transferFunc] [-lay layersTab] [-lr learningRate] [-max maxRep]"
-                + "[-v] [-h]\n"
-                + "-des : Le tableau de sortie désiré {and, or, xor}. Par défaut and\n"
+                + "java MainMLP [-des output] [-func transferFunc] [-lay layersTab] [-lr learningRate] [-max maxRep] [-h]\n"
                 + "-func : La fonction de transfert {sig, tanh}. Par défault sig\n"
-                + "-lay : Le tableau des couches {1, 2, 3}. Par défaut [2, 1]\n"
+                + "-lay : Le tableau des couches {1,2,3}. Par défaut [2,1]. ATTENTION : ne pas mettre d'espace entre les éléments du tableau\n"
                 + "-max : Le nombre maximum d'itérations. Par défaut 5000\n"
                 + "-lr : Le taux d'apprentissage. Par défaut 0.6\n"
-                + "-v    : Rendre bavard (mettre à la fin)\n"
                 + "-h    : afficher ceci (mettre à la fin)"
         );
 
@@ -29,8 +26,12 @@ public class MainMLP {
         String layers = ArgParse.getLayersFromCmd(args);
         String out = ArgParse.getTabFromCmd(args);
 
+        //Configuration des tableau d'entrées et de sorties
+        //Pour changer ces configurations, voir les constantes dans la classe tool/Constantes.java
         double[][] inputs = Constantes.INPUT_BINARY2_SHUFFLE;
         double[][] outputs = Constantes.OUTPUT_BINARY2_AND_SHUFFLE;
+
+
         int[] layersInt = ArgParse.makeLayers(layers);
         TransferFunction transferFunction = ArgParse.makeFunction(func);
 
@@ -38,14 +39,10 @@ public class MainMLP {
 
         MLP mlp = new MLP(layersInt, learningRate, transferFunction);
 
-        //System.out.println("Learning rate : " + learningRate);
-        //System.out.println("Fonction d'activation : " + transferFunction);
-        //System.out.println("Table : " + Arrays.deepToString(outputs));
-        //System.out.println("Layers : " + Arrays.toString(layersInt));
+
 
         int maxRep = ArgParse.getMaxRep(args);
 
-        boolean appris = false;
         int nbInter = 0;
         //* vrai si tous les exemples passent sans erreur *//*
 

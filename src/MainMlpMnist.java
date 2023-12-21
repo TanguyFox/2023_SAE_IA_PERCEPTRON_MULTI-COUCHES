@@ -9,6 +9,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 public class MainMlpMnist {
@@ -17,12 +18,11 @@ public class MainMlpMnist {
 
         ArgParse.setUsage("Utilisation :\n\n"
                 + "java MainMLP [-des output] [-func transferFunc] [-lay layersTab] [-lr learningRate] [-max maxRep]"
-                + "[-v] [-h]\n"
+                + "[-h]\n"
                 + "-func : La fonction de transfert {sig, tanh}. Par défault sig\n"
-                + "-lay : Le tableau des couches {1, 2, 3}. Par défaut [2, 1]\n"
+                + "-lay : Le tableau des couches {1,2,3}. Par défaut [2,1]  mais doit être configuré comme [784,...,10]. ATTENTION : ne pas mettre d'espace entre les éléments du tableau\n"
                 + "-max : Le nombre maximum d'itérations. Par défaut 5000\n"
                 + "-lr : Le taux d'apprentissage. Par défaut 0.6\n"
-                + "-v    : Rendre bavard (mettre à la fin)\n"
                 + "-h    : afficher ceci (mettre à la fin)"
         );
 
@@ -84,16 +84,15 @@ public class MainMlpMnist {
         double reussiteTrain = 0;
         double reussiteTest = 0;
 
-        List<String[]> data = new ArrayList<>();
-        String[] header = {"Iteration", "Taux d'erreur'", "Taux de réussite sur la base de test"};
-        data.add(header);
 
         System.out.println("Start learning...");
         while (reussiteTest < 98 && nbInterTest <= maxRep) {
-//            System.out.println("Shuffling data...");
-//            trainingData.shuffleImagettes();
+            System.out.println("Shuffling data...");
+            Collections.shuffle(trainingData.imagettes);
+
             double averageError = 0;
 
+            //Ces deux lignes ci-dessous permettent de mélanger les données d'apprentissage. Les commentées pour ne pas les mélanger.
             System.out.println("Iteration " + nbInterTest + " start");
             double error = 0;
             for (int i = 0; i < 10; i++) {
@@ -103,28 +102,24 @@ public class MainMlpMnist {
                 }
             }
 
-            System.out.println("\n\t- Erreur : " + error);
+            System.out.println("\n\t- Erreur sur l'apprentissage : " + error);
 
+            ///Réalisation des statistiques de reconnaissance sur la base d'entrainement
             reussiteTrain = stats.calculerStats(trainingData, mlp);
             System.out.println("\t- Taux de réussite sur la base d'apprentissage : " + reussiteTrain + "%");
 
-
+            ///Réalisation des statistiques de reconnaissance sur la base de test
             reussiteTest = stats.calculerStats(testData, mlp);
 
             System.out.println("\t- Taux de réussite sur la base de test : " + reussiteTest + "%");
-            String[] line = {String.valueOf(nbInterTest), String.valueOf(error), String.valueOf(reussiteTest)};
-            data.add(line);
-           nbInterTest++;
-
+            nbInterTest++;
         }
 
-        ExportToCSV.export(data);
 
-
-        System.out.println("Nombre d'interations : " + nbInterTest);
-//        System.out.println("Test :");
-//        System.out.println("Image d'un " + testData.imagettes.get(5).etiquette + " : \n"
-//                + Arrays.toString(mlp.execute(testData.imagettes.get(5).getPixels()))
-//                + "\n" + Arrays.toString(testData.imagettes.get(5).getOuput()));
+        if (reussiteTest >= 98) {
+            System.out.println("Le réseau a atteint un taux de réussite d'au moins 98% sur la base de test.");
+        } else {
+            System.out.println("Le réseau n'a pas atteint un taux de réussite de 98% sur la base de test.");
+        }
     }
 }

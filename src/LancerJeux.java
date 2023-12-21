@@ -1,8 +1,8 @@
-import defis.defi_3.ia.framework.common.ArgParse;
-import defis.defi_3.ia.framework.jeux.Game;
-import defis.defi_3.ia.framework.jeux.GameEngine;
-import defis.defi_3.ia.framework.jeux.GameState;
-import defis.defi_3.ia.framework.jeux.Player;
+import defis.defi_3.framework.common.ArgParse;
+import defis.defi_3.framework.jeux.Game;
+import defis.defi_3.framework.jeux.GameEngine;
+import defis.defi_3.framework.jeux.GameState;
+import defis.defi_3.framework.jeux.Player;
 
 /**
  * Lance un une partie de jeux donné et affiche le resultat
@@ -28,11 +28,12 @@ public class LancerJeux {
         String game_name = ArgParse.getGameFromCmd(args);
         String p1_type = ArgParse.getPlayer1FromCmd(args);
         String p2_type = ArgParse.getPlayer2FromCmd(args);
+        int profondeur = ArgParse.getProfondeurFromCmd(args);
  
         // créer un jeux, des joueurs et le moteur de jeux
         Game game = ArgParse.makeGame(game_name);
-        Player p1 = ArgParse.makePlayer(p1_type, game, true);
-        Player p2 = ArgParse.makePlayer(p2_type, game, false);
+        Player p1 = ArgParse.makePlayer(p1_type, game, true, profondeur);
+        Player p2 = ArgParse.makePlayer(p2_type, game, false, profondeur);
         GameEngine game_engine = new GameEngine(game, p1, p2);
 
         // on joue jusqu'à la fin

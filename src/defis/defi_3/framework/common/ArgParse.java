@@ -144,6 +144,18 @@ public class ArgParse {
         }
     }
 
+      /** Retourne la profondeur de l'algo
+      *
+      * @param args Le tableau de la ligne de commande
+      * @return la profondeur  ou null
+      */
+    public static int getProfondeurFromCmd(String[] args) {
+        handleFlags(args);
+        String prof = getArgFromCmd(args, "-prof");
+        if (prof == null) return 4;
+        return Integer.parseInt(prof);
+    }
+
 
     /**
      * Factory qui retourne une instance du problème choisie ou celui par défaut
@@ -206,7 +218,7 @@ public class ArgParse {
      * @param p1     vrai si joueur num 1
      * @return Une instance de player
      */
-    public static Player makePlayer(String p_type, Game game, boolean p1) {
+    public static Player makePlayer(String p_type, Game game, boolean p1, int profondeur) {
         if (p_type == null)
             p_type = "rnd";
         switch (p_type) {
@@ -217,7 +229,7 @@ public class ArgParse {
             case "minmax":
                 return new MinMaxPlayer(game, p1);
             case "alphabeta":
-                return new AlphaBetaPlayer(game, p1);
+                return new AlphaBetaPlayer(game, p1, profondeur);
             default:
                 System.out.println("Joueur inconnu");
                 usage();

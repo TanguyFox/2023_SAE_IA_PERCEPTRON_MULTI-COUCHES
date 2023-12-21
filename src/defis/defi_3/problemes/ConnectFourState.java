@@ -1,11 +1,12 @@
 package defis.defi_3.problemes;
 
-import defis.defi_3.framework.common.Misc;
+import java.util.Arrays;
+
+import defis.defi_3.framework.common.Action;
 import defis.defi_3.framework.common.State;
+import defis.defi_3.framework.common.Misc;
 import defis.defi_3.framework.jeux.GameState;
 import defis.defi_3.framework.recherche.HasHeuristic;
-
-import java.util.Arrays;
 
 public class ConnectFourState extends GameState implements HasHeuristic {
 
@@ -35,7 +36,7 @@ public class ConnectFourState extends GameState implements HasHeuristic {
 
         // -1: pas fini,1: X gagne, 0: O Gagne, 0.5 match nul
         game_value = -1;
-        player_to_move = X; // convention X comence 
+        player_to_move = X; // convention X comence
 
     }
 
@@ -82,7 +83,7 @@ public class ConnectFourState extends GameState implements HasHeuristic {
         res += Misc.dupString("+---", cols);
         res += "+\n";
         for(int i=rows-1;i>=0; i--){
-        //for (int i = 0; i < rows; i++) {
+            //for (int i = 0; i < rows; i++) {
             for (int j = 0; j < cols; j++)
                 res += "| " + (char) board[i][j] + " ";
             res += "|\n";
@@ -333,14 +334,22 @@ public class ConnectFourState extends GameState implements HasHeuristic {
         return false;
     }
 
-    private boolean checkWinningPosition (int player, int nbPiecesAligned) {
-        // Check rows
+    /**
+     * Retourne vrai si le joueur a nbTokenAligned jetons alignés en ligne, colonne ou diagonale
+     * Pourrait être améliorer en vérifiant qu'il y a assez de case vide après le jeton pour atteindre 4 jetons alignés (prendre en compte le bord du plateau)
+     *
+     * @param player Le joueur
+     * @param nbTokenAligned Le nombre de jetons alignés
+     * @return Vrai si le joueur a nbTokenAligned jetons alignés
+     */
+    private boolean checkAlignedToken (int player, int nbTokenAligned) {
+        // Est ce qu'une ligne à nbTokenAligned jetons alignés ?
         for (int i = 0; i < rows; i++) {
             int count = 0;
             for (int j = 0; j < cols; j++) {
                 if (board[i][j] == player) {
                     count++;
-                    if (count == nbPiecesAligned) {
+                    if (count == nbTokenAligned) {
                         return true;
                     }
                 } else {
@@ -349,13 +358,13 @@ public class ConnectFourState extends GameState implements HasHeuristic {
             }
         }
 
-        // Check columns
+        // Est ce qu'une colonne à nbTokenAligned jetons alignés ?
         for (int j = 0; j < cols; j++) {
             int count = 0;
             for (int i = 0; i < rows; i++) {
                 if (board[i][j] == player) {
                     count++;
-                    if (count == nbPiecesAligned) {
+                    if (count == nbTokenAligned) {
                         return true;
                     }
                 } else {
@@ -364,14 +373,14 @@ public class ConnectFourState extends GameState implements HasHeuristic {
             }
         }
 
-        // Check diagonals (top-left to bottom-right)
+        // Est ce qu'une diagonale (haut gauche vers bas droite) à nbTokenAligned jetons alignés ?
         for (int k = 0; k < rows + cols - 1; k++) {
             int count = 0;
             for (int j = Math.max(0, k - rows + 1); j <= Math.min(k, cols - 1); j++) {
                 int i = k - j;
                 if (i >= 0 && i < rows && j >= 0 && j < cols && board[i][j] == player) {
                     count++;
-                    if (count == nbPiecesAligned) {
+                    if (count == nbTokenAligned) {
                         return true;
                     }
                 } else {
@@ -380,14 +389,14 @@ public class ConnectFourState extends GameState implements HasHeuristic {
             }
         }
 
-        // Check diagonals (top-right to bottom-left)
+        // Est ce qu'une diagonale (bas gauche vers haut droite) à nbTokenAligned jetons alignés ?
         for (int k = 1 - rows; k < cols; k++) {
             int count = 0;
             for (int j = Math.max(0, k); j <= Math.min(k + rows - 1, cols - 1); j++) {
                 int i = j - k;
                 if (i >= 0 && i < rows && j >= 0 && j < cols && board[i][j] == player) {
                     count++;
-                    if (count == nbPiecesAligned) {
+                    if (count == nbTokenAligned) {
                         return true;
                     }
                 } else {
@@ -401,33 +410,43 @@ public class ConnectFourState extends GameState implements HasHeuristic {
 
     /**
      * Retourne la valeur de l'heuristique
-     *
+     * Pourrait être améliorer en prenant en compte les bordures du plateau
      * @return Le résultat
      */
     @Override
     public double getHeuristic() {
         double points = 0;
 
-        // Check for four-in-a-row for current player
+        // Est ce que le joueur courant a une position gagnante ? Si oui, cette action est priviléugiée
         if (isWiningMove(player_to_move)) {
-            return Double.MAX_VALUE;
+            return 1000000000;
         }
 
-        // Check for four-in-a-row for opponent
+        // Est ce que l'adversaire a une position gagnante ? Si oui, cette action est à éviter
         int opponent = (player_to_move == X ? O : X);
         if (isWiningMove(opponent)) {
-            return Double.MIN_VALUE;
+            return -1000000000;
         }
 
-        if (checkWinningPosition(player_to_move, 3)) points += 10000;
-        if (checkWinningPosition(opponent, 3)) points -= 10000;
+        // Est ce que le joueur courant a une ligne de 3 jetons alignés ? Si oui, cette action a une valeur importante
+        if (checkAlignedToken(player_to_move, 3)) points += 1000000;
+        // Est ce que l'adversaire a une ligne de 3 jetons alignés ? Si oui, cette action a une valeur importante et doit être bloquée
+        if (checkAlignedToken(opponent, 3)) points -= 1000000;
 
-        if (checkWinningPosition(player_to_move, 2)) points += 100;
-        if (checkWinningPosition(opponent, 2)) points -= 100;
+        // Est ce que le joueur courant a une ligne de 2 jetons alignés ? Si oui, cette action est à considérée
+        if (checkAlignedToken(player_to_move, 2)) points += 500;
+        // Est ce que l'adversaire a une ligne de 2 jetons alignés ? Si oui, cette action est à surveillée
+        if (checkAlignedToken(opponent, 2)) points -= 500;
 
-        if (checkWinningPosition(player_to_move, 1)) points += 10;
-        if (checkWinningPosition(opponent, 1)) points -= 10;
+        // Est ce que le joueur courant a une ligne de 1 jeton aligné ? Si oui, cette action est un bon point de départ
+        if (checkAlignedToken(player_to_move, 1)) points += 100;
+        // Est ce que l'adversaire a une ligne de 1 jeton aligné ? Si oui, cette action est à surveillée
+        if (checkAlignedToken(opponent, 1)) points -= 100;
 
+        int center = cols / 2;
+        // Est ce que le joueur courant a joué au centre ? Si oui, cette action offre plus de possibilités de victoire
+        //Ne semble pas marcher
+        //if (board[0][center] == player_to_move) points += 250;
         return points;
     }
 }

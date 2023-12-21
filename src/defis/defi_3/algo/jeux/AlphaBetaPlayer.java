@@ -8,31 +8,36 @@ import defis.defi_3.framework.jeux.Player;
 import defis.defi_3.problemes.ConnectFourState;
 
 public class AlphaBetaPlayer extends Player {
-    private final int profondeur = 5;
+    private int profondeur;
     /**
      * Represente un joueur
      *
      * @param g          l'instance du jeux
      * @param player_one si joueur 1
      */
-    public AlphaBetaPlayer(Game g, boolean player_one) {
+    public AlphaBetaPlayer(Game g, boolean player_one, int prof) {
         super(g, player_one);
+        profondeur = prof;
     }
 
     @Override
     public Action getMove(GameState state) {
+        long startTime = System.currentTimeMillis();
         ActionValuePair coup = null;
         if(state.getPlayerToMove() == ConnectFourState.X) {
             coup = maxValeur(state, Double.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY, profondeur);
         } else {
             coup = minValeur(state, Double.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY,profondeur);
         }
-
+        long endTime = System.currentTimeMillis();
+        System.out.println("Temps de calcul : " + (endTime - startTime) + "ms");
         return coup.getAction();
     }
 
     public ActionValuePair maxValeur(GameState state, double alpha, double beta, int depth) {
-        if(game.endOfGame(state) || depth == 0) {
+        if(game.endOfGame(state)) {
+            return new ActionValuePair(null, state.getGameValue());
+        } else if (depth == 0) {
             return new ActionValuePair(null, ((ConnectFourState)state).getHeuristic());
         }
 
@@ -55,7 +60,9 @@ public class AlphaBetaPlayer extends Player {
     }
 
     public ActionValuePair minValeur(GameState state, double alpha, double beta, int depth) {
-        if(game.endOfGame(state) || depth == 0) {
+        if(game.endOfGame(state)) {
+            return new ActionValuePair(null, state.getGameValue());
+        } else if(depth == 0) {
             return new ActionValuePair(null, ((ConnectFourState)state).getHeuristic());
         }
 
