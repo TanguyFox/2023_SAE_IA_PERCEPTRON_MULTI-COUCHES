@@ -1,22 +1,18 @@
 import sae.function.TransferFunction;
 import sae.mlp.MLP;
-import sae.tools.ArgParse;
+import sae.tools.ArgParseMLP;
 import sae.mnist.*;
-import sae.tools.ExportToCSV;
 
 import java.io.DataInputStream;
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
-import java.util.List;
 
 public class MainMlpMnist {
 
     public static void main(String[] args) throws IOException {
 
-        ArgParse.setUsage("Utilisation :\n\n"
+        ArgParseMLP.setUsage("Utilisation :\n\n"
                 + "java MainMLP [-des output] [-func transferFunc] [-lay layersTab] [-lr learningRate] [-max maxRep]"
                 + "[-h]\n"
                 + "-func : La fonction de transfert {sig, tanh}. Par défault sig\n"
@@ -66,17 +62,17 @@ public class MainMlpMnist {
         imageFileTest.close();
 
         System.out.println("Test data processed.");
-        double learningRate = ArgParse.getLearningRate(args);
-        String func = ArgParse.getFunctionFromCmd(args);
-        String layers = ArgParse.getLayersFromCmd(args);
+        double learningRate = ArgParseMLP.getLearningRate(args);
+        String func = ArgParseMLP.getFunctionFromCmd(args);
+        String layers = ArgParseMLP.getLayersFromCmd(args);
 
 
-        int[] layersInt = ArgParse.makeLayers(layers);
-        TransferFunction transferFunction = ArgParse.makeFunction(func);
+        int[] layersInt = ArgParseMLP.makeLayers(layers);
+        TransferFunction transferFunction = ArgParseMLP.makeFunction(func);
 
         MLP mlp = new MLP(layersInt, learningRate, transferFunction);
 
-        int maxRep = ArgParse.getMaxRep(args);
+        int maxRep = ArgParseMLP.getMaxRep(args);
 
         int nbInterTest = 1;
 

@@ -1,9 +1,9 @@
 package defis.defi1;
 
-import defis.defi1.defi1_old.structure.Node;
-import defis.defi1.defi1_old.structure.Position;
-import defis.defi1.defi1_old.structure.Ville;
-import defis.defi1.defi1_old.tool.Loader;
+import defis.defi1.structure.Node;
+import defis.defi1.structure.Position;
+import defis.defi1.structure.Ville;
+import defis.defi1.tool.Loader;
 
 import java.util.*;
 

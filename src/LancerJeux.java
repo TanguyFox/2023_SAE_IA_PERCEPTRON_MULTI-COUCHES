@@ -1,8 +1,8 @@
-import defis.defi_3.framework.common.ArgParse;
-import defis.defi_3.framework.jeux.Game;
-import defis.defi_3.framework.jeux.GameEngine;
-import defis.defi_3.framework.jeux.GameState;
-import defis.defi_3.framework.jeux.Player;
+import defis.commun.framework.common.ArgParse;
+import defis.commun.framework.jeux.Game;
+import defis.commun.framework.jeux.GameEngine;
+import defis.commun.framework.jeux.GameState;
+import defis.commun.framework.jeux.Player;
 
 /**
  * Lance un une partie de jeux donné et affiche le resultat

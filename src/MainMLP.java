@@ -1,18 +1,15 @@
-import sae.function.SigmoideFunction;
-import sae.function.TangeanteHyperboliqueFunction;
 import sae.function.TransferFunction;
 import sae.mlp.MLP;
-import sae.tools.ArgParse;
+import sae.tools.ArgParseMLP;
 import sae.tools.Constantes;
 
 import java.util.Arrays;
-import java.util.Random;
 
 public class MainMLP {
 
     public static void main(String[] args) {
 
-        ArgParse.setUsage("Utilisation :\n\n"
+        ArgParseMLP.setUsage("Utilisation :\n\n"
                 + "java MainMLP [-des output] [-func transferFunc] [-lay layersTab] [-lr learningRate] [-max maxRep] [-h]\n"
                 + "-func : La fonction de transfert {sig, tanh}. Par défault sig\n"
                 + "-lay : Le tableau des couches {1,2,3}. Par défaut [2,1]. ATTENTION : ne pas mettre d'espace entre les éléments du tableau\n"
@@ -21,10 +18,10 @@ public class MainMLP {
                 + "-h    : afficher ceci (mettre à la fin)"
         );
 
-        double learningRate = ArgParse.getLearningRate(args);
-        String func = ArgParse.getFunctionFromCmd(args);
-        String layers = ArgParse.getLayersFromCmd(args);
-        String out = ArgParse.getTabFromCmd(args);
+        double learningRate = ArgParseMLP.getLearningRate(args);
+        String func = ArgParseMLP.getFunctionFromCmd(args);
+        String layers = ArgParseMLP.getLayersFromCmd(args);
+        String out = ArgParseMLP.getTabFromCmd(args);
 
         //Configuration des tableau d'entrées et de sorties
         //Pour changer ces configurations, voir les constantes dans la classe tool/Constantes.java
@@ -32,8 +29,8 @@ public class MainMLP {
         double[][] outputs = Constantes.OUTPUT_BINARY2_AND_SHUFFLE;
 
 
-        int[] layersInt = ArgParse.makeLayers(layers);
-        TransferFunction transferFunction = ArgParse.makeFunction(func);
+        int[] layersInt = ArgParseMLP.makeLayers(layers);
+        TransferFunction transferFunction = ArgParseMLP.makeFunction(func);
 
         long startTime = System.currentTimeMillis();
 
@@ -41,7 +38,7 @@ public class MainMLP {
 
 
 
-        int maxRep = ArgParse.getMaxRep(args);
+        int maxRep = ArgParseMLP.getMaxRep(args);
 
         int nbInter = 0;
         //* vrai si tous les exemples passent sans erreur *//*
