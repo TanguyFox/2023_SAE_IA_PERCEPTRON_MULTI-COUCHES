@@ -19,6 +19,7 @@ public class LancerJeux {
              + "[-v] [-h]\n"
              + "-game : Le nom du jeux {tic, c4}. Par défautl tic\n"
              + "-p1/2 : L'agorithme joueur {rnd, hum, minmax, alphabeta}. Par défault rnd pour les deux\n"
+                    + "-prof : La profondeur de recherche pour les joueurs alphabeta. Par défaut 7\n"
              + "-v    : Rendre bavard (mettre à la fin)\n"
              + "-h    : afficher ceci (mettre à la fin)"
              

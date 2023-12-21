@@ -152,7 +152,7 @@ public class ArgParse {
     public static int getProfondeurFromCmd(String[] args) {
         handleFlags(args);
         String prof = getArgFromCmd(args, "-prof");
-        if (prof == null) return 4;
+        if (prof == null) return 7;
         return Integer.parseInt(prof);
     }
 
